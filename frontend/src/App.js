@@ -9,21 +9,45 @@ import AddTask from "./components/AddTask";
 import About from "./components/About";
 
 const App = () => {
-    const [tasks, setTasks] = useState([])
+    const [tasks, setTasks] = useState([
+
+        {
+            id: 1,
+            text: "Doctors Appointment",
+            day: "Feb 5th at 2pm",
+            reminder: true
+        },
+        {
+            id: 2,
+            text: "Uni",
+            day: "Feb 6th at 1:30pm",
+            reminder: false
+        }
+    ])
 
     useEffect(() => {
-        const getTasks = async () => {
-            const tasksFromServer = await fetchTasks()
-            setTasks(tasksFromServer)
-        }
-        getTasks()
+        //JSON Server
+        //  const getTasks = async () => {
+        // const tasksFromServer = await fetchTasksfromJsonServer()
+        //  setTasks(tasksFromServer)
+        //  }
+        //   getTasks()
+
+        //Node Server
+        fetchTasksfromNodeServer()
     }, [])
 
-    const fetchTasks = async () => {
+    const fetchTasksfromJsonServer = async () => {
         const res = await fetch('http://localhost:5000/tasks')
         const data = await res.json()
         console.log(data)
         return data
+    }
+
+    const fetchTasksfromNodeServer = async () => {
+        const res = await fetch('/tasks')
+        const data = await res.json()
+        setTasks(data)
     }
 
     const [showAddTask, setShowAddTask] = useState(false)
@@ -41,7 +65,6 @@ const App = () => {
     const toggleReminder = (id) => {
         console.log(id)
         setTasks(tasks.map((task) => task.id === id ? {...task, reminder: !task.reminder} : task))
-
     }
 
     return (
